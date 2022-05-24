@@ -54,3 +54,49 @@ resource "aws_route_table_association" "public2" {
   subnet_id      = "subnet-0d4c2898683fc4961"
   route_table_id = aws_route_table.public_rt.id
 }
+
+resource "aws_lb" "gwlb" {
+  name                             = "GWLB-Private"
+  load_balancer_type               = "gateway"
+  enable_cross_zone_load_balancing = true
+  subnets                          = ["subnet-063c160ffc65dbb1b","subnet-0005618a3ca75459f"]
+  
+}
+
+resource "aws_vpc_endpoint_service" "vpc_end_serv" {
+  depends_on = [aws_lb.gwlb]
+  acceptance_required        = false
+  gateway_load_balancer_arns = [aws_lb.gwlb.arn]
+  tags = {
+    Name = ("VPCE-GWLB")
+  }
+}
+
+  resource "aws_lb_target_group" "tgt_group" {
+  name                 = "GWLB-Group"
+  vpc_id               = var.vpc_cidr
+  target_type          = "ip"
+  protocol             = "GENEVE"
+  port                 = "6081"
+
+  health_check {
+    enabled             = true
+    interval            = 5
+    path                = "/php/login.php"
+    port                = 443
+    protocol            = "HTTPS"
+  }
+}
+  resource "aws_lb_target_group_attachment" "register-tgp1" {
+  depends_on       = [aws_lb_target_group.tgt_group]
+  target_group_arn = aws_lb_target_group.tgt_group.arn
+  target_id        = "192.168.0.20"
+  port             = 6081
+}
+
+  resource "aws_lb_target_group_attachment" "register-tgp2" {
+  depends_on       = [aws_lb_target_group.tgt_group]
+  target_group_arn = aws_lb_target_group.tgt_group.arn
+  target_id        = "192.168.1.20"
+  port             = 6081
+}
