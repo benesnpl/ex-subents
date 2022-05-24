@@ -144,11 +144,11 @@ variable "ssh_key_name" {
 }
 
 variable "mgm_ip_address1" {
-	default = "192.168.0.20"
+	default = "192.168.0.10"
 }
 
 variable "mgm_ip_address2" {
-	default = "192.168.1.20"
+	default = "192.168.1.10"
 }
 
 variable "public_eni_1" {
