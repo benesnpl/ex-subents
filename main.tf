@@ -357,3 +357,42 @@ resource "aws_route_table_association" "mgmt2" {
   subnet_id      = "subnet-0199bfb0f358637f8"
   route_table_id = aws_route_table.mgmt_rt.id
 }
+
+resource "aws_route_table" "private_rt" {
+  depends_on = [aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_vpn_connection.Miami]
+  vpc_id = var.vpc_cidr
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_ec2_transit_gateway.main_tgw.id
+  }
+  
+  
+  tags = {
+    Name = ("Private-rt")
+  }
+}
+
+resource "aws_route_table_association" "prvt" {
+  depends_on = [aws_route_table.private_rt]
+  subnet_id      = "subnet-0eb8e8ca0941836da"
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "prvt3" {
+  depends_on = [aws_route_table.private_rt]
+  subnet_id      = "subnet-06616e4504ae42805"
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "prvt2" {
+  depends_on = [aws_route_table.private_rt]
+  subnet_id      = "subnet-063c160ffc65dbb1b"
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "prvt4" {
+  depends_on = [aws_route_table.private_rt]
+  subnet_id      = "subnet-063c160ffc65dbb1b"
+  route_table_id = aws_route_table.private_rt.id
+}
