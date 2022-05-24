@@ -129,3 +129,46 @@ resource "aws_vpc_endpoint" "az2" {
     Name = ("Security-AZ2")
   }
 }
+
+resource "aws_route_table" "tgw1_rt" {
+  depends_on = [aws_vpc_endpoint.az1]
+  vpc_id = var.vpc_cidr
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    vpc_endpoint_id = aws_vpc_endpoint.az1.id
+  }
+  
+  
+  tags = {
+    Name = ("TGW-AZ1-rt")
+  }
+}
+
+resource "aws_route_table_association" "tgw1" {
+  depends_on = [aws_route_table.tgw1_rt]
+  subnet_id      = "subnet-0ba95bcefb564a33a"
+  route_table_id = aws_route_table.tgw1_rt.id
+}
+
+
+resource "aws_route_table" "tgw2_rt" {
+  depends_on = [aws_vpc_endpoint.az2]
+  vpc_id = var.vpc_cidr
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    vpc_endpoint_id = aws_vpc_endpoint.az2.id
+  }
+  
+  
+  tags = {
+    Name = ("TGW-AZ2-rt")
+  }
+}
+
+resource "aws_route_table_association" "tgw2" {
+  depends_on = [aws_route_table.tgw2_rt]
+  subnet_id      = "subnet-009eaf0ed0f70b5ff"
+  route_table_id = aws_route_table.tgw2_rt.id
+}
