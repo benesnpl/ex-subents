@@ -150,3 +150,19 @@ variable "mgm_ip_address1" {
 variable "mgm_ip_address2" {
 	default = "192.168.1.20"
 }
+
+variable "public_eni_1" {
+	default = "192.168.0.132"
+}
+
+variable "public_eni_2" {
+	default = "192.168.1.132"
+}
+
+variable "private_eni_1" {
+	default = "192.168.0.20"
+}
+
+variable "private_eni_2" {
+	default = "192.168.1.20"
+}
