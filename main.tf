@@ -176,7 +176,7 @@ resource "aws_route_table_association" "tgw2" {
 resource "aws_security_group" "public_sg" {
   name        = "public_sg"
   description = "public SG"
-  vpc_id      = aws_vpc.main_vpc.id
+  vpc_id      = var.vpc_cidr
 
   dynamic "ingress" {
     for_each = var.rules_inbound_public_sg
@@ -204,7 +204,7 @@ resource "aws_security_group" "public_sg" {
  resource "aws_security_group" "private_sg" {
   name        = "private_sg"
   description = "Private SG"
-  vpc_id      = aws_vpc.main_vpc.id
+  vpc_id      = var.vpc_cidr
 
   dynamic "ingress" {
     for_each = var.rules_inbound_private_sg
@@ -232,7 +232,7 @@ resource "aws_security_group" "public_sg" {
   resource "aws_security_group" "MGMT_sg" {
   name        = "MGMT_sg"
   description = "MGMT SG"
-  vpc_id      = aws_vpc.main_vpc.id
+  vpc_id      = var.vpc_cidr
 
   dynamic "ingress" {
     for_each = var.rules_inbound_mgmt_sg
