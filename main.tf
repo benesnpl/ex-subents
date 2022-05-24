@@ -497,3 +497,47 @@ resource "aws_instance" "vm1" {
   associate_with_private_ip = var.mgm_ip_address2
   depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw]
 }
+
+
+resource "aws_network_interface" "public1" {
+  subnet_id       = "subnet-0c8733bef4b4d1945"
+  private_ips     = [var.public_eni_1]
+  security_groups = [aws_security_group.public_sg.id]
+  depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng1]	  
+
+  attachment {
+    instance     = aws_instance.vm1.id
+    device_index = 2
+  }
+}
+
+resource "aws_network_interface" "public2" {
+  subnet_id       = "subnet-0d4c2898683fc4961"
+  private_ips     = [var.public_eni_2]
+  security_groups = [aws_security_group.public_sg.id]
+  depends_on                = [aws_instance.vm2,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng2]
+  attachment {
+    instance     = aws_instance.vm2.id
+    device_index = 2
+  }
+}
+
+resource "aws_eip" "pub1" {
+  vpc              = true
+  tags = {
+    Name = ("PUB1-EIP")
+  }
+  network_interface = aws_network_interface.public1.id
+  associate_with_private_ip = var.public_eni_1
+  depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw]
+}
+
+    resource "aws_eip" "pub2" {
+  vpc              = true
+  tags = {
+    Name = ("PUB2-EIP")
+  }
+  network_interface = aws_network_interface.public2.id
+  associate_with_private_ip = var.public_eni_2
+  depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw]
+}
