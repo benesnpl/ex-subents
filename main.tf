@@ -393,6 +393,33 @@ resource "aws_route_table_association" "prvt2" {
 
 resource "aws_route_table_association" "prvt4" {
   depends_on = [aws_route_table.private_rt]
-  subnet_id      = "subnet-063c160ffc65dbb1b"
+  subnet_id      = "subnet-0005618a3ca75459f"
   route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table" "gwlbe_rt" {
+  depends_on = [aws_ec2_transit_gateway.main_tgw,aws_vpn_connection.Miami]
+  vpc_id = var.vpc_cidr
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_ec2_transit_gateway.main_tgw.id
+  }
+  
+  
+  tags = {
+    Name = ("GWLBE-rt")
+  }
+}
+
+resource "aws_route_table_association" "gwlbe" {
+  depends_on = [aws_route_table.gwlbe_rt,aws_ec2_transit_gateway.main_tgw,aws_route_table.gwlbe_rt]
+  subnet_id      = "subnet-0991f9901f298ccd3"
+  route_table_id = aws_route_table.gwlbe_rt.id
+}
+
+resource "aws_route_table_association" "gwlbe2" {
+  depends_on = [aws_route_table.gwlbe_rt,aws_ec2_transit_gateway.main_tgw,aws_route_table.gwlbe_rt]
+  subnet_id      = "subnet-02bcd0492c4772591"
+  route_table_id = aws_route_table.gwlbe_rt.id
 }
