@@ -2,6 +2,59 @@ variable "aws_region" {
 	default = "ap-northeast-3"
 }
 
+variable "tgw-sub1" {
+	default = "subnet-0ba95bcefb564a33a"
+}
+
+variable "tgw-sub2" {
+	default = "subnet-009eaf0ed0f70b5ff"
+}
+
+variable "prv-sub1" {
+	default = "subnet-0eb8e8ca0941836da"
+}
+
+variable "prv-sub2" {
+	default = "subnet-06616e4504ae42805"
+}
+
+variable "mng-sub1" {
+	default = "subnet-025de6e9104e64776"
+}
+
+
+variable "mng-sub2" {
+	default = "subnet-0199bfb0f358637f8"
+}
+
+
+variable "gwlb-sub1" {
+	default = "subnet-063c160ffc65dbb1b"
+}
+
+variable "gwlb-sub2" {
+	default = "subnet-0005618a3ca75459f"
+}
+
+
+variable "gwlbe-sub1" {
+	default = "subnet-0991f9901f298ccd3"
+}
+
+variable "gwlbe-sub2" {
+	default = "subnet-02bcd0492c4772591"
+}
+
+
+variable "pub-sub1" {
+	default = "subnet-0c8733bef4b4d1945"
+}
+
+variable "pub-sub2" {
+	default = "subnet-0d4c2898683fc4961"
+}
+
+
 variable "vpc_cidr" {
 	default = "vpc-04bbc382a70c6adf6"
 }
