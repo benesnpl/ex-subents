@@ -509,6 +509,9 @@ resource "aws_network_interface" "public1" {
     instance     = aws_instance.vm1.id
     device_index = 2
   }
+  tags = {
+   Name = join("", [var.coid, "-Public-ENI-AZ1"])
+  }
 }
 
 resource "aws_network_interface" "public2" {
@@ -519,6 +522,9 @@ resource "aws_network_interface" "public2" {
   attachment {
     instance     = aws_instance.vm2.id
     device_index = 2
+  }
+  tags = {
+   Name = join("", [var.coid, "-Public-ENI-AZ2"])
   }
 }
 
@@ -551,6 +557,9 @@ resource "aws_network_interface" "private1" {
     instance     = aws_instance.vm1.id
 	device_index = 3
   }
+  tags = {
+   Name = join("", [var.coid, "-Private-ENI-AZ1"])
+  }
 }
 
 resource "aws_network_interface" "private2" {
@@ -562,5 +571,8 @@ resource "aws_network_interface" "private2" {
   attachment {
     instance     = aws_instance.vm2.id
 	device_index = 3
+  }
+  tags = {
+   Name = join("", [var.coid, "-Private-ENI-AZ2"])
   }
 }
