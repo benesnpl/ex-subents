@@ -129,3 +129,24 @@ variable "il_external" {
 variable "fl_external" {
 	default = "62.103.97.241"
 }
+
+variable "azs" {
+	type = list
+	default = ["ap-northeast-3a","ap-northeast-3b"]
+}
+
+variable "instance_type" {
+	default = "m5.2xlarge"
+}
+
+variable "ssh_key_name" {
+	default = "firewall"
+}
+
+variable "mgm_ip_address1" {
+	default = "192.168.0.20"
+}
+
+variable "mgm_ip_address2" {
+	default = "192.168.1.20"
+}
