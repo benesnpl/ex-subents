@@ -321,3 +321,39 @@ resource "aws_ec2_transit_gateway_route" "mia_vpn" {
   transit_gateway_route_table_id = aws_ec2_transit_gateway.main_tgw.association_default_route_table_id
   blackhole                      = false
 }
+
+resource "aws_route_table" "mgmt_rt" {
+  depends_on = [aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_vpn_connection.Miami]
+  vpc_id = var.vpc_cidr
+  
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main_igw.id
+  }
+  
+  route {
+    cidr_block = "10.159.94.0/23"
+    gateway_id = aws_ec2_transit_gateway.main_tgw.id
+  }
+  
+   route {
+    cidr_block = "100.70.0.0/15"
+    gateway_id = aws_ec2_transit_gateway.main_tgw.id
+  }
+  
+  tags = {
+    Name = ("mgmt-rt")
+  }
+}
+
+resource "aws_route_table_association" "mgmt" {
+  depends_on = [aws_route_table.mgmt_rt,aws_ec2_transit_gateway.main_tgw]
+  subnet_id      = "subnet-025de6e9104e64776"
+  route_table_id = aws_route_table.mgmt_rt.id
+}
+
+resource "aws_route_table_association" "mgmt2" {
+  depends_on = [aws_route_table.mgmt_rt,aws_ec2_transit_gateway.main_tgw]
+  subnet_id      = "subnet-0199bfb0f358637f8"
+  route_table_id = aws_route_table.mgmt_rt.id
+}
