@@ -423,3 +423,77 @@ resource "aws_route_table_association" "gwlbe2" {
   subnet_id      = "subnet-02bcd0492c4772591"
   route_table_id = aws_route_table.gwlbe_rt.id
 }
+
+data "aws_ami" "panorama_ami" {
+  most_recent = true
+  owners      = ["aws-marketplace"]
+
+  filter {
+    name   = "name"
+    values = ["PA-VM-AWS*"]
+  }
+} 
+
+resource "aws_instance" "vm1" {
+  ami                                  = data.aws_ami.panorama_ami.id
+  instance_type                        = var.instance_type
+  availability_zone                    = var.azs[0]
+  key_name                             = var.ssh_key_name
+  private_ip                           = var.mgm_ip_address1
+  subnet_id                            = "subnet-025de6e9104e64776"
+  vpc_security_group_ids               = [aws_security_group.MGMT_sg.id]
+  disable_api_termination              = false
+  instance_initiated_shutdown_behavior = "stop"
+  ebs_optimized                        = true
+  monitoring                           = false
+  tags = {
+    Name = "vmseries-a"
+  }
+
+  root_block_device {
+    delete_on_termination = true
+  }
+
+}
+
+  resource "aws_instance" "vm2" {
+  ami                                  = data.aws_ami.panorama_ami.id
+  instance_type                        = var.instance_type
+  availability_zone                    = var.azs[1]
+  key_name                             = var.ssh_key_name
+  private_ip                           = var.mgm_ip_address2
+  subnet_id                            = "subnet-0199bfb0f358637f8"
+  vpc_security_group_ids               = [aws_security_group.MGMT_sg.id]
+  disable_api_termination              = false
+  instance_initiated_shutdown_behavior = "stop"
+  ebs_optimized                        = true
+  monitoring                           = false
+  tags = {
+    Name = "vmseries-b"
+  }
+
+  root_block_device {
+    delete_on_termination = true
+  }
+
+}
+
+ resource "aws_eip" "mng1" {
+  vpc              = true
+  tags = {
+    Name = ("MGMT1-EIP")
+  }
+  instance = aws_instance.vm1.id
+  associate_with_private_ip = var.mgm_ip_address1
+  depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw]
+}
+
+    resource "aws_eip" "mng2" {
+  vpc              = true
+  tags = {
+    Name = ("MGMT2-EIP")
+  }
+  instance = aws_instance.vm2.id
+  associate_with_private_ip = var.mgm_ip_address2
+  depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw]
+}
