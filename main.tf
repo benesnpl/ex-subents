@@ -109,3 +109,23 @@ resource "aws_vpc_endpoint_service" "vpc_end_serv" {
     target_group_arn = aws_lb_target_group.tgt_group.arn
   }
 }
+
+resource "aws_vpc_endpoint" "az1" {
+  service_name      = aws_vpc_endpoint_service.vpc_end_serv.service_name
+  subnet_ids        = ["subnet-0991f9901f298ccd3"]
+  vpc_endpoint_type = aws_vpc_endpoint_service.vpc_end_serv.service_type
+  vpc_id            = var.vpc_cidr
+  tags = {
+    Name = ("Security-AZ1")
+  }
+}
+
+resource "aws_vpc_endpoint" "az2" {
+  service_name      = aws_vpc_endpoint_service.vpc_end_serv.service_name
+  subnet_ids        = ["subnet-02bcd0492c4772591"]
+  vpc_endpoint_type = aws_vpc_endpoint_service.vpc_end_serv.service_type
+  vpc_id            = var.vpc_cidr
+  tags = {
+    Name = ("Security-AZ2")
+  }
+}
