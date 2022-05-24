@@ -147,7 +147,7 @@ resource "aws_route_table" "tgw1_rt" {
 
 resource "aws_route_table_association" "tgw1" {
   depends_on = [aws_route_table.tgw1_rt]
-  subnet_id      = "subnet-0ba95bcefb564a33a"
+  subnet_id      = var.tgw-sub1
   route_table_id = aws_route_table.tgw1_rt.id
 }
 
@@ -169,7 +169,7 @@ resource "aws_route_table" "tgw2_rt" {
 
 resource "aws_route_table_association" "tgw2" {
   depends_on = [aws_route_table.tgw2_rt]
-  subnet_id      = "subnet-009eaf0ed0f70b5ff"
+  subnet_id      = var.tgw-sub2
   route_table_id = aws_route_table.tgw2_rt.id
 }
 
@@ -348,13 +348,13 @@ resource "aws_route_table" "mgmt_rt" {
 
 resource "aws_route_table_association" "mgmt" {
   depends_on = [aws_route_table.mgmt_rt,aws_ec2_transit_gateway.main_tgw]
-  subnet_id      = "subnet-025de6e9104e64776"
+  subnet_id      = var.mng-sub1
   route_table_id = aws_route_table.mgmt_rt.id
 }
 
 resource "aws_route_table_association" "mgmt2" {
   depends_on = [aws_route_table.mgmt_rt,aws_ec2_transit_gateway.main_tgw]
-  subnet_id      = "subnet-0199bfb0f358637f8"
+  subnet_id      = var.mng-sub2
   route_table_id = aws_route_table.mgmt_rt.id
 }
 
@@ -375,25 +375,25 @@ resource "aws_route_table" "private_rt" {
 
 resource "aws_route_table_association" "prvt" {
   depends_on = [aws_route_table.private_rt]
-  subnet_id      = "subnet-0eb8e8ca0941836da"
+  subnet_id      = var.prv-sub1
   route_table_id = aws_route_table.private_rt.id
 }
 
 resource "aws_route_table_association" "prvt3" {
   depends_on = [aws_route_table.private_rt]
-  subnet_id      = "subnet-06616e4504ae42805"
+  subnet_id      = var.prv-sub2
   route_table_id = aws_route_table.private_rt.id
 }
 
 resource "aws_route_table_association" "prvt2" {
   depends_on = [aws_route_table.private_rt]
-  subnet_id      = "subnet-063c160ffc65dbb1b"
+  subnet_id      = var.gwlb-sub1
   route_table_id = aws_route_table.private_rt.id
 }
 
 resource "aws_route_table_association" "prvt4" {
   depends_on = [aws_route_table.private_rt]
-  subnet_id      = "subnet-0005618a3ca75459f"
+  subnet_id      = var.gwlb-sub2
   route_table_id = aws_route_table.private_rt.id
 }
 
@@ -414,13 +414,13 @@ resource "aws_route_table" "gwlbe_rt" {
 
 resource "aws_route_table_association" "gwlbe" {
   depends_on = [aws_route_table.gwlbe_rt,aws_ec2_transit_gateway.main_tgw,aws_route_table.gwlbe_rt]
-  subnet_id      = "subnet-0991f9901f298ccd3"
+  subnet_id      = var.gwlbe-sub1
   route_table_id = aws_route_table.gwlbe_rt.id
 }
 
 resource "aws_route_table_association" "gwlbe2" {
   depends_on = [aws_route_table.gwlbe_rt,aws_ec2_transit_gateway.main_tgw,aws_route_table.gwlbe_rt]
-  subnet_id      = "subnet-02bcd0492c4772591"
+  subnet_id      = var.gwlbe-sub2
   route_table_id = aws_route_table.gwlbe_rt.id
 }
 
@@ -440,7 +440,7 @@ resource "aws_instance" "vm1" {
   availability_zone                    = var.azs[0]
   key_name                             = var.ssh_key_name
   private_ip                           = var.mgm_ip_address1
-  subnet_id                            = "subnet-025de6e9104e64776"
+  subnet_id                            = var.mng-sub1
   vpc_security_group_ids               = [aws_security_group.MGMT_sg.id]
   disable_api_termination              = false
   instance_initiated_shutdown_behavior = "stop"
@@ -462,7 +462,7 @@ resource "aws_instance" "vm1" {
   availability_zone                    = var.azs[1]
   key_name                             = var.ssh_key_name
   private_ip                           = var.mgm_ip_address2
-  subnet_id                            = "subnet-0199bfb0f358637f8"
+  subnet_id                            = var.mng-sub2
   vpc_security_group_ids               = [aws_security_group.MGMT_sg.id]
   disable_api_termination              = false
   instance_initiated_shutdown_behavior = "stop"
@@ -500,7 +500,7 @@ resource "aws_instance" "vm1" {
 
 
 resource "aws_network_interface" "public1" {
-  subnet_id       = "subnet-0c8733bef4b4d1945"
+  subnet_id       = var.pub-sub1
   private_ips     = [var.public_eni_1]
   security_groups = [aws_security_group.public_sg.id]
   depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng1]	  
@@ -512,7 +512,7 @@ resource "aws_network_interface" "public1" {
 }
 
 resource "aws_network_interface" "public2" {
-  subnet_id       = "subnet-0d4c2898683fc4961"
+  subnet_id       = var.pub-sub2
   private_ips     = [var.public_eni_2]
   security_groups = [aws_security_group.public_sg.id]
   depends_on                = [aws_instance.vm2,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng2]
@@ -543,7 +543,7 @@ resource "aws_eip" "pub1" {
 }
 
 resource "aws_network_interface" "private1" {
-  subnet_id       = "subnet-0eb8e8ca0941836da"
+  subnet_id       = var.prv-sub1
   private_ips     = [var.private_eni_1]
   security_groups = [aws_security_group.private_sg.id]
   depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng1]
@@ -554,7 +554,7 @@ resource "aws_network_interface" "private1" {
 }
 
 resource "aws_network_interface" "private2" {
-  subnet_id       = "subnet-06616e4504ae42805"
+  subnet_id       = var.prv-sub2
   private_ips     = [var.private_eni_2]
   security_groups = [aws_security_group.private_sg.id]
   depends_on                = [aws_instance.vm2,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng2]
