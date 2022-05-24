@@ -1,72 +1,69 @@
 variable "aws_region" {
-	default = "ap-northeast-3"
+	default = null
 }
 
 variable "tgw-sub1" {
-	default = "subnet-0ba95bcefb564a33a"
+	default = null
 }
 
 variable "tgw-sub2" {
-	default = "subnet-009eaf0ed0f70b5ff"
+	default = null
 }
 
 variable "prv-sub1" {
-	default = "subnet-0eb8e8ca0941836da"
+	default = null
 }
 
 variable "prv-sub2" {
-	default = "subnet-06616e4504ae42805"
+	default = null
 }
 
 variable "mng-sub1" {
-	default = "subnet-025de6e9104e64776"
+	default = null
 }
 
 
 variable "mng-sub2" {
-	default = "subnet-0199bfb0f358637f8"
+	default = null
 }
 
 
 variable "gwlb-sub1" {
-	default = "subnet-063c160ffc65dbb1b"
+	default = null
 }
 
 variable "gwlb-sub2" {
-	default = "subnet-0005618a3ca75459f"
+	default = null
 }
 
 
 variable "gwlbe-sub1" {
-	default = "subnet-0991f9901f298ccd3"
+	default = null
 }
 
 variable "gwlbe-sub2" {
-	default = "subnet-02bcd0492c4772591"
+	default = null
 }
 
 
 variable "pub-sub1" {
-	default = "subnet-0c8733bef4b4d1945"
+	default = null
 }
 
 variable "pub-sub2" {
-	default = "subnet-0d4c2898683fc4961"
+	default = null
 }
 
 
 variable "vpc_cidr" {
-	default = "vpc-04bbc382a70c6adf6"
+	default = null
 }
 
 variable "coid" {
-	default = "PROT"
+	default = null
 }
 
-variable "sub_tgw" {
-  type = list(string)
-  default = ["subnet-0ba95bcefb564a33a","subnet-009eaf0ed0f70b5ff"]
-}
+
 
 variable "rules_inbound_public_sg" {
   default = [
@@ -176,46 +173,46 @@ variable "rules_outbound_mgmt_sg" {
 }
 
 variable "il_external" {
-	default = "207.223.34.132"
+	default = null
 }
 
 variable "fl_external" {
-	default = "62.103.97.241"
+	default = null
 }
 
 variable "azs" {
 	type = list
-	default = ["ap-northeast-3a","ap-northeast-3b"]
+	default = null
 }
 
 variable "instance_type" {
-	default = "m5.2xlarge"
+	default = null
 }
 
 variable "ssh_key_name" {
-	default = "firewall"
+	default = null
 }
 
 variable "mgm_ip_address1" {
-	default = "192.168.0.10"
+	default = null
 }
 
 variable "mgm_ip_address2" {
-	default = "192.168.1.10"
+	default = null
 }
 
 variable "public_eni_1" {
-	default = "192.168.0.132"
+	default = null
 }
 
 variable "public_eni_2" {
-	default = "192.168.1.132"
+	default = null
 }
 
 variable "private_eni_1" {
-	default = "192.168.0.20"
+	default = null
 }
 
 variable "private_eni_2" {
-	default = "192.168.1.20"
+	default = null
 }
