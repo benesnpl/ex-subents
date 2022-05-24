@@ -12,7 +12,7 @@ resource "aws_ec2_transit_gateway" "main_tgw" {
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "tgw-main" {
   depends_on = [aws_ec2_transit_gateway.main_tgw]
-  subnet_ids         = ["subnet-009eaf0ed0f70b5ff","subnet-0ba95bcefb564a33a"]
+  subnet_ids         = [var.tgw-sub1,var.tgw-sub2]
   transit_gateway_id = aws_ec2_transit_gateway.main_tgw.id
   vpc_id             = var.vpc_cidr
   appliance_mode_support = "enable"
@@ -45,13 +45,13 @@ resource "aws_route_table" "public_rt" {
 
 resource "aws_route_table_association" "public" {
   depends_on = [aws_route_table.public_rt]
-  subnet_id      = "subnet-0c8733bef4b4d1945"
+  subnet_id      = var.pub-sub1
   route_table_id = aws_route_table.public_rt.id
 }
 
 resource "aws_route_table_association" "public2" {
   depends_on = [aws_route_table.public_rt]
-  subnet_id      = "subnet-0d4c2898683fc4961"
+  subnet_id      = var.pub-sub2
   route_table_id = aws_route_table.public_rt.id
 }
 
@@ -59,7 +59,7 @@ resource "aws_lb" "gwlb" {
   name                             = "GWLB-Private"
   load_balancer_type               = "gateway"
   enable_cross_zone_load_balancing = true
-  subnets                          = ["subnet-063c160ffc65dbb1b","subnet-0005618a3ca75459f"]
+  subnets                          = [vat.gwlb-sub1,vat.gwlb-sub1]
   
 }
 
@@ -112,7 +112,7 @@ resource "aws_vpc_endpoint_service" "vpc_end_serv" {
 
 resource "aws_vpc_endpoint" "az1" {
   service_name      = aws_vpc_endpoint_service.vpc_end_serv.service_name
-  subnet_ids        = ["subnet-0991f9901f298ccd3"]
+  subnet_ids        = [var.gwlbe-sub1]
   vpc_endpoint_type = aws_vpc_endpoint_service.vpc_end_serv.service_type
   vpc_id            = var.vpc_cidr
   tags = {
@@ -122,7 +122,7 @@ resource "aws_vpc_endpoint" "az1" {
 
 resource "aws_vpc_endpoint" "az2" {
   service_name      = aws_vpc_endpoint_service.vpc_end_serv.service_name
-  subnet_ids        = ["subnet-02bcd0492c4772591"]
+  subnet_ids        = [var.gwlbe-sub2]
   vpc_endpoint_type = aws_vpc_endpoint_service.vpc_end_serv.service_type
   vpc_id            = var.vpc_cidr
   tags = {
