@@ -541,3 +541,26 @@ resource "aws_eip" "pub1" {
   associate_with_private_ip = var.public_eni_2
   depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw]
 }
+
+resource "aws_network_interface" "private1" {
+  subnet_id       = "subnet-0eb8e8ca0941836da"
+  private_ips     = [var.private_eni_1]
+  security_groups = [aws_security_group.private_sg.id]
+  depends_on                = [aws_instance.vm1,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng1]
+  attachment {
+    instance     = aws_instance.vm1.id
+	device_index = 3
+  }
+}
+
+resource "aws_network_interface" "private2" {
+  subnet_id       = "subnet-06616e4504ae42805"
+  private_ips     = [var.private_eni_2]
+  security_groups = [aws_security_group.private_sg.id]
+  depends_on                = [aws_instance.vm2,aws_internet_gateway.main_igw,aws_ec2_transit_gateway.main_tgw,aws_eip.mng2]
+
+  attachment {
+    instance     = aws_instance.vm2.id
+	device_index = 3
+  }
+}
