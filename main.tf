@@ -49,7 +49,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public_rt.id
 }
 
-resource "aws_route_table_association" "public" {
+resource "aws_route_table_association" "public2" {
   depends_on = [aws_route_table.public_rt]
   subnet_id      = "subnet-0d4c2898683fc4961"
   route_table_id = aws_route_table.public_rt.id
